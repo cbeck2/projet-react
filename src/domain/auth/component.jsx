@@ -1,122 +1,126 @@
-import {React, useState} from "react"
-import {LoginWithInstance} from "./api"
-import {registerCheck} from "./services"
+import { React, useState } from "react"
+import { LoginWithInstance } from "./api"
+import { registerCheck } from "./services"
 import { Navigate } from 'react-router-dom'
 
+export function LoginForm() {
+    const [emailInput, setEmailInput] = useState("");
+    const [passwordInput, setPasswordInput] = useState("");
+    const [useLocalStorage, setUseLocalStorage] = useState(false);
+    const [shouldRedirect, setShouldRedirect] = useState(false);
+    const [userId, setUserId] = useState("");
 
-export function FormLog (){
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [local, setLocal] = useState(false);
-    const [redirect, setRedirect] = useState(false);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const result = await LoginWithInstance(email,password,local);
-        if (result){
-            setEmail("");
-            setPassword("");
-            setRedirect(true);
+    const handleLoginSubmit = async (event) => {
+        event.preventDefault();
+        const loginResult = await LoginWithInstance(emailInput, passwordInput, useLocalStorage);
+        if (loginResult) {
+            setEmailInput("");
+            setPasswordInput("");
+            setUserId(sessionStorage.getItem("user") || localStorage.getItem("user"));
+            setShouldRedirect(true);
         }
     };
 
-    return(
-        <form>
-            {redirect && <Navigate to="/profile" />}
-            <p>email</p>
+    return (
+        <form onSubmit={handleLoginSubmit}>
+            {shouldRedirect && <Navigate to={`/profile?id=${userId}`} />}
+            <p>Email</p>
             <input
                 type="email"
                 required
-                value={email}
-                placeholder="email"
-                onChange={(e) => setEmail(e.target.value)}
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
             />
-            <p>password</p>
+            <p>Password</p>
             <input
                 type="password"
                 required
-                value={password}
-                placeholder="password"
-                onChange={(e) => setPassword(e.target.value)}
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
             />
-            <p>
-                stay logged in
-                <input
-                    type="checkbox"
-                    value={local}
-                    onChange={(e) => setLocal(e.target.value)}
-                ></input>
-            </p>
-            <button type="submit" onClick={handleSubmit}>submit</button>
+            <p>Use Local Storage</p>
+            <input
+                type="checkbox"
+                checked={useLocalStorage}
+                onChange={(e) => setUseLocalStorage(e.target.checked)}
+            />
+            <button type="submit">Login</button>
         </form>
     );
 }
 
-export function FormSignup (){
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [vpassword, setVPassword] = useState("");
-    const [pseudo, setPseudo] = useState("");
-    const [redirect, setRedirect] = useState(false);
+export function RegistrationForm() {
+    const [emailInput, setEmailInput] = useState("");
+    const [passwordInput, setPasswordInput] = useState("");
+    const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
+    const [usernameInput, setUsernameInput] = useState("");
+    const [shouldRedirect, setShouldRedirect] = useState(false);
+    const [userId, setUserId] = useState("");
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const result = await registerCheck(password,vpassword,email,pseudo)
-        switch(result){
-            case(0):
-                setEmail("");
-                setPassword("");
-                setVPassword("");
-                setPseudo("");
-                setRedirect(true);
+    const handleRegistrationSubmit = async (event) => {
+        event.preventDefault();
+        const registrationResult = await registerCheck(
+            passwordInput,
+            confirmPasswordInput,
+            emailInput,
+            usernameInput
+        );
+
+        switch (registrationResult) {
+            case 0:
+                setEmailInput("");
+                setPasswordInput("");
+                setConfirmPasswordInput("");
+                setUsernameInput("");
+                setUserId(sessionStorage.getItem("user") || localStorage.getItem("user"));
+                setShouldRedirect(true);
                 break;
-            case(1):
-                //todo afficher message d'erreur mdp pas sécurisé
+            case 1:
+                // TODO: Display password security error message
                 break;
-            case(2):
-                //todo afficher message d'erreur mdp pas identique
+            case 2:
+                // TODO: Display email format error message
+                break;
+            case 3:
+                // TODO: Display username taken error message
                 break;
         }
     };
 
-    return(
-        <form>
-            {redirect && <Navigate to="/profile" />}
-            <p>pseudo</p>
+    return (
+        <form onSubmit={handleRegistrationSubmit}>
+            {shouldRedirect && <Navigate to={`/profile?id=${userId}`} />}
+            <p>Username</p>
             <input
                 type="text"
                 required
-                value={pseudo}
-                placeholder="pseudo"
-                onChange={(e) => setPseudo(e.target.value)}
+                value={usernameInput}
+                onChange={(e) => setUsernameInput(e.target.value)}
             />
-            <p>email</p>
+            <p>Email</p>
             <input
                 type="email"
                 required
-                value={email}
-                placeholder="email"
-                onChange={(e) => setEmail(e.target.value)}
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
             />
-            <p>test</p>
+            <p>Password</p>
             <input
                 type="password"
                 required
-                value={password}
-                placeholder="password"
-                onChange={(e) => setPassword(e.target.value)}
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
             />
-            <p>verif password</p>
+            <p>Confirm Password</p>
             <input
                 type="password"
                 required
-                value={vpassword}
-                placeholder="password"
-                onChange={(e) => setVPassword(e.target.value)}
+                value={confirmPasswordInput}
+                onChange={(e) => setConfirmPasswordInput(e.target.value)}
             />
-            <button type="submit" onClick={handleSubmit}>submit</button>
+            <button type="submit">Register</button>
         </form>
     );
 }
 
-export default FormLog;
+export default LoginForm;

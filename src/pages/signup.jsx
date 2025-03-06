@@ -1,11 +1,11 @@
 import React from 'react'
-import {FormSignup} from '../domain/auth/component'
+import {RegistrationForm} from '../domain/auth/component'
 
 function Signup() {
 
     return (
         <div>
-            <FormSignup/>
+            <RegistrationForm/>
         </div>
     )
 }

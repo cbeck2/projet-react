@@ -23,7 +23,7 @@ export async function LoginWithInstance(email,password,local){
 
 export async function SignupWithInstance(email,password,pseudo){
     try{
-        const response = await axiosInstance.post('/users/register',{
+        const response = await axiosInstance.post('/auth/register',{
             "email":email,
             "password":password
         });
@@ -33,7 +33,7 @@ export async function SignupWithInstance(email,password,pseudo){
         console.log('erreur requète inscription',error);
     }
     try{
-        const response = await axiosInstance.post('/utilisateurs',{
+        await axiosInstance.post('/utilisateurs',{
             "id":localStorage.getItem("user"),
             "pseudo":pseudo,
         });

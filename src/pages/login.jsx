@@ -1,13 +1,13 @@
 import { React } from 'react'
-import { FormLog } from '../domain/auth/component'
-import { RedSignup } from '../domain/auth/services'
+import { LoginForm } from '../domain/auth/component'
+import { RedirSignup } from '../domain/auth/services'
 
 function Login() {
 
     return (
         <div>
-            <FormLog/>
-            <RedSignup/>
+            <LoginForm/>
+            <RedirSignup/>
         </div>
     )
 }

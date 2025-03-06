@@ -1,11 +1,12 @@
 import {axiosInstance} from '../axiosInstance'
 
-export async function PostTweet(tweet,id){
+export async function postTweet(tweet,id){
     try{
-        await axiosInstance.post('/tweet',
+        await axiosInstance.post('/tweets',
         {
             "content": tweet,
-            "userid": id
+            "userid": id,
+            "date": Date.now()
         });
         return(true);
     } catch(error){
@@ -14,19 +15,31 @@ export async function PostTweet(tweet,id){
     }
 }
 
-export async function getTweets(){
+export async function getFollowedTweets(id){
     try{
-        const response = await axiosInstance.get('/tweet');
-        return response.data;
+        let utilisateur = (await axiosInstance.get('/utilisateurs/'+id)).data.follows;
+        const follows = utilisateur.join("&userid=")+"&userid="+id;
+        const response = (await axiosInstance.get('/tweets?userid='+follows)).data
+        return(response);
     } catch(error){
         console.log('erreur requète',error);
         return false;
     }
 }
 
-export async function DeleteTweet(id){
+export async function getTweets(id){
     try{
-        await axiosInstance.delete('/tweet/'+id);
+        const response = (await axiosInstance.get('/tweets?userid='+id)).data
+        return response;
+    } catch(error){
+        console.log('erreur requète',error);
+        return false;
+    }
+}
+
+export async function deleteTweet(id){
+    try{
+        await axiosInstance.delete('/tweets/'+id);
         return true;
     }catch(error){
         console.log('erreur requète delete',error);
@@ -34,9 +47,9 @@ export async function DeleteTweet(id){
     }
 }
 
-export async function UpdateTweet(id,newContent){
+export async function updateTweet(id,newContent){
     try{
-        await axiosInstance.patch('/tweet/'+id,{
+        await axiosInstance.patch('/tweets/'+id,{
             "content":newContent
         });
         return true;

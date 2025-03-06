@@ -1,8 +1,8 @@
 import { React , useState , useEffect } from 'react';
 import { Navigate , NavLink } from "react-router-dom";
 import { Disconnect } from '../component';
-import { DeleteTweet, PostTweet , getTweets , UpdateTweet } from './api';
-import { GetUserId } from './services';
+import { deleteTweet, postTweet , getFollowedTweets , updateTweet } from './api';
+import { formatDate, getUserId } from './services';
 
 export function FormTweet(){
     const [tweet,setTweet] = useState("");
@@ -10,7 +10,7 @@ export function FormTweet(){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = await PostTweet(tweet,await GetUserId())
+        const result = await postTweet(tweet,getUserId())
         result ? setRedirect(true) : console.log("erreur envoi tweet")
     }
 
@@ -41,7 +41,7 @@ export function TopPageNew(){
             <NavLink to="/tweet">
                     <p>tweet</p>
             </NavLink>
-            <NavLink to="/profile">
+            <NavLink to={`/profile?id=${sessionStorage.getItem("user") ?? localStorage.getItem("user")}`}>
                     <p>profile</p>
             </NavLink>
         </div>
@@ -57,7 +57,7 @@ export function TopPageTweet(){
             <NavLink to="/newtweet">
                     <p>new tweets</p>
             </NavLink>
-            <NavLink to="/profile">
+            <NavLink to={`/profile?id=${sessionStorage.getItem("user") ?? localStorage.getItem("user")}`}>
                     <p>profile</p>
             </NavLink>
         </div>
@@ -68,10 +68,11 @@ export function ShowTweets() {
     const [tweets, setTweets] = useState([]);
     const [editingTweetId, setEditingTweetId] = useState(null);
     const [newContent, setNewContent] = useState("");
+    const [triageDate,setTriageDate] = useState(true)
 
     useEffect(() => {
         const fetchTweets = async () => {
-            setTweets(await getTweets());
+            setTweets((await getFollowedTweets(getUserId())).sort((a, b) => a.date - b.date));
         };
         fetchTweets();
     }, []);
@@ -81,15 +82,27 @@ export function ShowTweets() {
         setNewContent(tweet.content);
     };
 
-    const handleUpdate = async (id) => {
-        await UpdateTweet(id, newContent);
+    function triDate(liste){
+        liste.sort((a, b) => a.date - b.date);
+        setTriageDate(!triageDate)
+        return liste;
+    }
+
+    const handleUpdate = async () => {
+        await updateTweet(getUserId(), newContent);
         setEditingTweetId(null);
         setNewContent("");
-        setTweets(await getTweets());
+        setTweets(await getFollowedTweets(getUserId()));
     };
+    
 
     return (
         <div>
+            {triageDate ? (
+                <button onClick={() => setTriageDate(!triageDate)}>changer pour popularité</button>
+            ):(
+                <button onClick={() => setTweets(triDate(tweets))}>changer pour date</button>
+            )}
             {tweets && tweets.length > 0 ? (
                 tweets.map((tweet, index) => (
                     <li key={index}>
@@ -104,9 +117,15 @@ export function ShowTweets() {
                             </form>
                         ) : (
                             <div>
-                                {tweet.content}
-                                <button onClick={() => handleEdit(tweet)}>Edit</button>
-                                <button onClick={() => DeleteTweet(tweet.id)}>Delete</button>
+                                {tweet.content + " le : " + formatDate(tweet.date) }
+                                {
+                                    (getUserId()===tweet.userid)?
+                                        <>
+                                            <button onClick={() => handleEdit(tweet)}>Edit</button>
+                                            <button onClick={() => deleteTweet(tweet.id)}>Delete</button>
+                                        </>:
+                                        null
+                                }
                             </div>
                         )}
                     </li>

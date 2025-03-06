@@ -1,14 +1,18 @@
-import { GetUserNameWithInstance } from './api'
-
-export async function GetLoggedUser(){
+export async function getLoggedUser(fonction){
     if (sessionStorage.getItem("user")){
         return(
-            await GetUserNameWithInstance(sessionStorage.getItem("user"))
+            await fonction(sessionStorage.getItem("user"))
         );
     }else{
         return(
-            await GetUserNameWithInstance(localStorage.getItem("user"))
+            await fonction(localStorage.getItem("user"))
         );
     }
+}
 
+export function getUser(){
+    return(new URLSearchParams(location.search).get("id"));
+}
+export function getUserId(){
+    return(sessionStorage.getItem("user") ?? localStorage.getItem("user"));
 }

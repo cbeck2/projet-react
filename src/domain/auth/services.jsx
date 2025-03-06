@@ -23,17 +23,14 @@ export async function registerCheck(password,vpassword,email,pseudo){
     }
 }
 
-
 export const AuthGuard = (WrappedComponent) => {
     const Auth = (props) => {
         const [isAuth, setIsAuth] = useState(false);
         const navigate = useNavigate()
 
         useEffect(() => {
-            if(!localStorage.getItem("key")){
-                if(!sessionStorage.getItem("key")){
-                    return navigate("/");
-                }
+            if(!(localStorage.getItem("key") ?? sessionStorage.getItem("key"))){
+                return navigate("/");
             }
             setIsAuth(true);
         }, []);
@@ -42,7 +39,7 @@ export const AuthGuard = (WrappedComponent) => {
     return Auth
 };
 
-export function RedSignup(){
+export function RedirSignup(){
     const [signup, setSignup] = useState(false);
 
     function redirect(){
