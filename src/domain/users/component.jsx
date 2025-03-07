@@ -1,8 +1,8 @@
-import { getUser, getUserId } from './services'
+import { formatDate, getUser, getUserId } from './services'
 import { React , useEffect , useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { Navigate, NavLink } from "react-router-dom";
 import { Disconnect } from '../component';
-import { following, getFollowers, getFollows, getUserName , isFollowed, unfollowing } from './api';
+import { following, getFollowers, getFollows, getUserName , isFollowed, likeTweet, setSearchPseudo, unfollowing, unlikeTweet } from './api';
 import { getTweets } from '../tweets/api';
 
 export function ProfilePage(){
@@ -46,9 +46,18 @@ export function ProfilePage(){
 }
 
 export function TopPage(){
-    const [searchPseudo,setSearchPseudo] = useState("");
+
+    const [redirect,setRedirect] = useState("");
+    const [Pseudo,setPseudo] = useState("");
+
+    const handleSearch = async (event) => {
+        event.preventDefault();
+        setRedirect(await setSearchPseudo(Pseudo));
+    }
+
     return(
         <div>
+            {redirect && <Navigate to={`/profile?id=${redirect}`} />}
             <NavLink to="/notif">
                     <p>notification</p>
             </NavLink>
@@ -58,15 +67,15 @@ export function TopPage(){
             <NavLink to="/newtweet">
                     <p>new tweet</p>
             </NavLink>
-            <form id="search">
+            <form onSubmit={handleSearch}>
                 <input
                     type="text"
                     required
-                    value={searchPseudo}
+                    value={Pseudo}
                     placeholder="pseudo"
-                    onChange={(e) => setSearchPseudo(e.target.value)}
+                    onChange={(e) => setPseudo(e.target.value)}
                 />
-                <button>valider</button>
+                <button type="submit">valider</button>
             </form>
         </div>
     );
@@ -95,6 +104,16 @@ export function ShowTweets() {
         setTweets(await getTweets(getUserId()));
     };
 
+    const handleLike = async (tweetId) => {
+        await likeTweet(getUserId(), tweetId);
+        setTweets(await getTweets(getUser()));
+    };
+
+    const handleUnlike = async (tweetId) => {
+        await unlikeTweet(getUserId(), tweetId);
+        setTweets(await getTweets(getUser()));
+    };
+
     return (
         <div>
             {tweets && tweets.length > 0 ? (
@@ -111,14 +130,18 @@ export function ShowTweets() {
                             </form>
                         ) : (
                             <div>
-                                {tweet.content + " le : " + tweet.date }
+                                {tweet.content + " le : " + formatDate(tweet.date) }
                                 {
                                     (getUserId()===tweet.userid)?
                                         <>
                                             <button onClick={() => handleEdit(tweet)}>Edit</button>
                                             <button onClick={() => deleteTweet(tweet.id)}>Delete</button>
-                                        </>:
-                                        null
+                                        </>
+                                    :
+                                        (tweet.like.includes(Number(getUserId()))?
+                                            <button onClick={() => handleUnlike(tweet.id)}>Unlike</button>
+                                        :
+                                            <button onClick={() => handleLike(tweet.id)}>Like</button>)
                                 }
                             </div>
                         )}

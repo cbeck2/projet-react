@@ -1,14 +1,15 @@
-import { React } from 'react';
-import { AuthGuard } from '../domain/auth/services'
-import { ShowTweets, TopPageTweet } from '../domain/tweets/component';
+import React from 'react';
+import { TopPage } from '../domain/users/component/TopPage';
+import { ShowTweets } from '../domain/users/component/ShowTweets';
+import { AuthGuard } from '../domain/auth/services';
 
-function Tweet(){
-    return(
+function Tweet() {
+    return (
         <div>
-            <TopPageTweet/>
-            <h1>tweets</h1>
-            <ShowTweets/>
+            <TopPage />
+            <ShowTweets />
         </div>
-    )
+    );
 }
+
 export default AuthGuard(Tweet);

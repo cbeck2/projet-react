@@ -5,7 +5,7 @@ export async function getUserName(id){
         const response = await axiosInstance.get('/utilisateurs/'+id);
         return(response.data.pseudo);
     } catch(error){
-        console.log('erreur requète',error);
+        console.log(error);
         return false;
     }
 }
@@ -71,6 +71,45 @@ export async function unfollowing(id){
         return response.data.followers.length-1;
     } catch(error){
         console.log('erreur requète',error);
+        return false;
+    }
+}
+
+export async function likeTweet(userId, tweetId) {
+    try {
+        const tweet = await axiosInstance.get(`/tweets/${tweetId}`);
+        const likes = tweet.data.like ? [...tweet.data.like, Number(userId)] : [Number(userId)]
+        await axiosInstance.patch(`/tweets/${tweetId}`, {
+            "like": likes
+        });
+        return true;
+    } catch (error) {
+        console.log('erreur requète like',error);
+        return false;
+    }
+}
+
+
+export async function unlikeTweet(userId, tweetId) {
+    try {
+        const tweet = await axiosInstance.get(`/tweets/${tweetId}`);
+        const likes = Array.isArray(tweet.data.like) ? tweet.data.like.filter(id => id !== Number(userId)) : [];
+        const response = await axiosInstance.patch(`/tweets/${tweetId}`, {
+            "like": likes,
+        });
+        return true;
+    } catch (error) {
+        console.log('erreur requète unlike',error);
+        return false;
+    }
+}
+
+export async function setSearchPseudo(pseudo){
+    try{
+        const response = await axiosInstance.get('/utilisateurs?pseudo='+pseudo);
+        return response.data[0].id;
+    } catch(error){
+        console.log('erreur requète searchUser',error);
         return false;
     }
 }

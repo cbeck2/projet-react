@@ -1,11 +1,13 @@
 import { React } from 'react';
 import { AuthGuard } from '../domain/auth/services'
-import { FormTweet , TopPageNew } from '../domain/tweets/component';
+import { TopPageNewTweet } from '../domain/tweets/component/TopPageNewTweet';
+import { FormTweet } from '../domain/tweets/component/FormTweet';
+
 
 function NewTweet(){
     return(
         <div>
-            <TopPageNew/>
+            <TopPageNewTweet/>
             <FormTweet/>
         </div>
     )

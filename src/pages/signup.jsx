@@ -1,5 +1,5 @@
 import React from 'react'
-import {RegistrationForm} from '../domain/auth/component'
+import {RegistrationForm} from '../domain/auth/component/RegistrationForm'
 
 function Signup() {
 

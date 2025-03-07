@@ -1,13 +1,15 @@
-import {React, useState} from 'react';
-import { AuthGuard } from '../domain/auth/services'
-import {ProfilePage,TopPage} from '../domain/users/component'
+import React from 'react';
+import { ProfilePage } from '../domain/users/component/ProfilePage';
+import { TopPage } from '../domain/users/component/TopPage';
+import { AuthGuard } from '../domain/auth/services';
 
-function Profile(){
-    return(
+function Profile() {
+    return (
         <div>
             <TopPage/>
-            <ProfilePage/>
+            <ProfilePage />
         </div>
-    )
+    );
 }
+
 export default AuthGuard(Profile);

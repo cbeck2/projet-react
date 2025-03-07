@@ -1,5 +1,5 @@
 import { React } from 'react'
-import { LoginForm } from '../domain/auth/component'
+import { LoginForm } from '../domain/auth/component/LoginForm'
 import { RedirSignup } from '../domain/auth/services'
 
 function Login() {
