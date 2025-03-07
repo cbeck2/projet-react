@@ -31,7 +31,7 @@ export function ShowTweets() {
 
     const handleUnlike = async (tweetId) => {
         await unlikeTweet(getUserId(), tweetId);
-        setTweets(await getTweets(getUserId()));
+        setTweets(await getTweetsDate(getUserId()));
     };
 
     const getByDate = async () => {
@@ -63,7 +63,6 @@ export function ShowTweets() {
 
     return (
         <div className="w-full max-w-3xl mx-auto p-4 mt-10">
-  {/* Filters */}
   <div className="flex flex-wrap gap-4 items-center mb-6">
     {!byDate && (
       <label className="flex items-center space-x-2 text-gray-700">
@@ -97,7 +96,6 @@ export function ShowTweets() {
     )}
   </div>
 
-  {/* Tweets List */}
   {tweets && tweets.length > 0 ? (
     <ul className="space-y-4">
       {tweets.map((tweet, index) => (

@@ -22,7 +22,6 @@ export function ShowTweets() {
 
     const handleUpdate = async () => {
         await updateTweet(getUserId(), newContent);
-        setEditingTweetId(null);
         setNewContent("");
         setTweets(await getTweets(getUserId()));
     };
@@ -43,7 +42,8 @@ export function ShowTweets() {
     tweets.map((tweet, index) => (
       <li key={index} className="bg-white shadow-md rounded-lg p-4 flex flex-col gap-2">
         {editingTweetId === tweet.id ? (
-          <form className="flex flex-col gap-2">
+          <form className="flex flex-col gap-2"
+          onSubmit={() => handleUpdate(tweet.id)}>
             <input
               type="text"
               value={newContent}
@@ -51,7 +51,7 @@ export function ShowTweets() {
               className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <button 
-              onClick={() => handleUpdate(tweet.id)}
+              type="submit"
               className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
             >
               Update
@@ -63,7 +63,6 @@ export function ShowTweets() {
               {tweet.content} <span className="text-gray-500 text-sm">le {formatDate(tweet.date)}</span>
             </p>
 
-            {/* Action Buttons */}
             <div className="flex gap-2">
               {getUserId() === tweet.userid ? (
                 <>
@@ -103,7 +102,7 @@ export function ShowTweets() {
       </li>
     ))
   ) : (
-    <p className="text-center text-gray-500">Aucun élément à afficher</p>
+    <p className="text-center text-gray-500">no tweet to show</p>
   )}
 </div>
     );

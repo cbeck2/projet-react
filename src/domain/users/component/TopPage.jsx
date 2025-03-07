@@ -15,7 +15,6 @@ export function TopPage() {
         <div className="bg-white shadow-md w-full py-4 px-6 fixed top-0 left-0">
       {redirect && <Navigate to={`/profile?id=${redirect}`} />}
       
-      {/* Navigation Links - Each takes 1/3 of the width */}
       <div className="flex">
         <NavLink 
           to="/notif" 
@@ -37,7 +36,6 @@ export function TopPage() {
         </NavLink>
       </div>
 
-      {/* Search Form Below the Links */}
       <form 
         onSubmit={handleSearch} 
         className="mt-4 flex justify-center space-x-2"

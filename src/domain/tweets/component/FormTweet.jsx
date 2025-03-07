@@ -18,7 +18,6 @@ export function FormTweet(){
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
   {redirect && <Navigate to="/tweet" />}
 
-  {/* Tweet Input Form */}
   <form 
     onSubmit={handleSubmit} 
     className="w-full max-w-lg bg-white shadow-lg rounded-lg p-6 flex flex-col space-y-4"
@@ -39,7 +38,6 @@ export function FormTweet(){
     </button>
   </form>
 
-  {/* Disconnect Button */}
   <div className="mt-6">
     <Disconnect />
   </div>

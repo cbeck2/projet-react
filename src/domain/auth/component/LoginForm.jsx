@@ -67,7 +67,7 @@ export function LoginForm() {
       className="mr-2"
     />
     <label htmlFor="useLocalStorage" className="text-gray-700">
-      Use Local Storage
+      stay logged
     </label>
   </div>
   <button
