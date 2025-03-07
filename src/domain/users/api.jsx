@@ -104,12 +104,24 @@ export async function unlikeTweet(userId, tweetId) {
     }
 }
 
-export async function setSearchPseudo(pseudo){
+export async function SearchId(pseudo){
     try{
         const response = await axiosInstance.get('/utilisateurs?pseudo='+pseudo);
         return response.data[0].id;
     } catch(error){
-        console.log('erreur requète searchUser',error);
+        console.log('erreur requète searchId',error);
         return false;
     }
 }
+
+export async function SearchPseudo(id){
+    try{
+        const follows = id.join("&id=");
+        const response = await axiosInstance.get('/utilisateurs?&id='+follows);
+        return response.data;
+    } catch(error){
+        console.log('erreur requète searchpseudo',error);
+        return false;
+    }
+}
+

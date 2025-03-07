@@ -1,8 +1,9 @@
 import { React, useEffect, useState } from 'react';
-import { getUser } from '../services';
+import { getUser, getUserId } from '../services';
 import { following, getFollowers, getFollows, getUserName, isFollowed, unfollowing } from '../api';
 import { Disconnect } from '../../component';
 import { ShowTweets } from './ShowTweets';
+import { NavLink } from 'react-router-dom';
 
 export function ProfilePage() {
     const [name, setName] = useState("");
@@ -32,8 +33,23 @@ export function ProfilePage() {
         
         <div className="bg-white shadow-lg rounded-lg p-6 w-full md:w-1/2 text-center">
           <p className="text-lg font-semibold">User: {name}</p>
-          <p className="text-gray-700">Follows: {follows}</p>
-          <p className="text-gray-700">Followers: {followers}</p>
+          {
+            (getUserId()===getUser())?
+            <>
+              <NavLink to="/follows" className="text-gray-700 hover:text-blue-500 transition-colors">
+                Follows: {follows}
+              </NavLink>
+              <br></br>
+              <NavLink to="/followers" className="text-gray-700 hover:text-blue-500 transition-colors">
+                Followers: {followers}
+              </NavLink>
+            </>
+            :
+            <>
+              <p className="text-gray-700">Follows: {follows}</p>
+              <p className="text-gray-700">Followers: {followers}</p>
+            </>
+          }
 
           {isFollow === 0 ? (
             <button 

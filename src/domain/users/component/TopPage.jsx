@@ -1,6 +1,6 @@
 import { React, useState } from 'react';
 import { Navigate, NavLink } from "react-router-dom";
-import { setSearchPseudo } from '../api';
+import { SearchId } from '../api';
 
 export function TopPage() {
     const [redirect, setRedirect] = useState("");
@@ -8,7 +8,7 @@ export function TopPage() {
 
     const handleSearch = async (event) => {
         event.preventDefault();
-        setRedirect(await setSearchPseudo(pseudo));
+        setRedirect(await SearchId(pseudo));
     };
 
     return (
@@ -22,7 +22,7 @@ export function TopPage() {
         >
           Notification
         </NavLink>
-        <NavLink 
+        <NavLink
           to="/tweet" 
           className="w-1/3 text-center text-gray-700 hover:text-blue-500 transition-colors py-2"
         >
