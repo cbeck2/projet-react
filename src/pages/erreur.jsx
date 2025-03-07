@@ -2,9 +2,9 @@ import { React } from 'react';
 
 function Erreur(){
     return(
-        <div>
+        <h1>
             erreur 404
-        </div>
+        </h1>
     )
 }
 export default (Erreur);

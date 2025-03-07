@@ -1,7 +1,7 @@
 import { React } from "react"
 import { SignupWithInstance } from "./api"
 import { useEffect , useState } from "react";
-import { useNavigate , Navigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const validatePassword = (password) => {
     const regex = /^(?=(.*[a-z]))(?=(.*[A-Z]))(?=(.*\d))(?=(.*\W))[A-Za-z\d\W]{8,}$/;
@@ -38,18 +38,3 @@ export const AuthGuard = (WrappedComponent) => {
     };
     return Auth
 };
-
-export function RedirSignup(){
-    const [signup, setSignup] = useState(false);
-
-    function redirect(){
-        setSignup(true);
-    }
-
-    return(
-        <div>
-            {signup && <Navigate to="/signup" />}
-            <button onClick={redirect}>s'inscrire</button>
-        </div>
-    )
-}

@@ -19,7 +19,7 @@ export async function postTweet(tweet,id){
 export async function getFollowedTweet(id){
     try{
         let utilisateur = (await axiosInstance.get('/utilisateurs/'+id)).data.follows;
-        const follows = utilisateur.join("&userid=")+"&userid="+id;
+        const follows = utilisateur.join("&userid=");
         const response = (await axiosInstance.get('/tweets?userid='+follows+'&_sort=date&_order=desc')).data
         return(response);
     } catch(error){
